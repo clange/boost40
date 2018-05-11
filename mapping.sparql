@@ -1,0 +1,40 @@
+PREFIX sosa: <http://www.w3.org/ns/sosa/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX om: <http://www.ontology-of-units-of-measure.org/resource/om-2/>
+PREFIX gf: <http://georgfischer.com/milling#>
+
+CONSTRUCT {
+  ?observation_env_temp a sosa:Observation ;
+    sosa:resultTime ?dateTime ;
+    sosa:observedProperty gf:EnvironmentTemperature ;
+    sosa:hasResult [
+      a om:Point ;
+      om:hasScale om:CelsiusScale ;
+      om:hasNumericalValue ?env_temp_cleaned ] .
+  ?observation_spindle_brg_temp a sosa:Observation ;
+    sosa:resultTime ?dateTime ;
+    sosa:observedProperty gf:SpindleBearingTemperature ;
+    sosa:hasResult [
+      a om:Point ;
+      om:hasScale om:CelsiusScale ;
+      om:hasNumericalValue ?spindle_brg_temp_cleaned ] .
+  ?observation_axis_positions a sosa:Observation ;
+    sosa:resultTime ?dateTime ;
+    sosa:observedProperty gf:AxisPositions ;
+    sosa:hasResult [
+      a gf:3DPoint ;
+      gf:x ?axis_X_pos_cleaned ;
+      gf:y ?axis_Y_pos_cleaned ;
+      gf:z ?axis_Z_pos_cleaned ] .
+}
+WHERE {
+  BIND (URI(CONCAT('http://www.boost40.eu/pilots/gf/milling#env_temp_', ?date, 'T', ?time, 'Z')) AS ?observation_env_temp)
+  BIND (URI(CONCAT('http://www.boost40.eu/pilots/gf/milling#spindle_brg_temp_', ?date, 'T', ?time, 'Z')) AS ?observation_spindle_brg_temp)
+  BIND (URI(CONCAT('http://www.boost40.eu/pilots/gf/milling#axis_positions_', ?date, 'T', ?time, 'Z')) AS ?observation_axis_positions)
+  BIND (STRDT(CONCAT(?date, 'T', ?time, 'Z'), xsd:dateTime) AS ?dateTime)
+  BIND (IF(REGEX(?env_temp, '^[0-9]{5}$'), CONCAT(SUBSTR(?env_temp, 1, 2), '.', SUBSTR(?env_temp, 3)), ?env_temp) AS ?env_temp_cleaned)
+  BIND (IF(REGEX(?spindle_brg_temp, '^[0-9]{5}$'), CONCAT(SUBSTR(?spindle_brg_temp, 1, 2), '.', SUBSTR(?spindle_brg_temp, 3)), ?spindle_brg_temp) AS ?spindle_brg_temp_cleaned)
+  BIND (STRDT(?axis_X_pos, xsd:decimal) AS ?axis_X_pos_cleaned)
+  BIND (STRDT(?axis_Y_pos, xsd:decimal) AS ?axis_Y_pos_cleaned)
+  BIND (STRDT(?axis_Z_pos, xsd:decimal) AS ?axis_Z_pos_cleaned)
+}
