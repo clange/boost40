@@ -1,2 +1,2 @@
-# boost40
-Boost4.0
+# Boost4.0 implementations by the University of Bonn
+For now, this repository includes the companion code to the tutorial [Semantic Vocabularies for Smart Industry](https://www.slideshare.net/FI-WARE/fiware-global-summit-ids-implementation-with-fiware-software-components) given at the FIWARE Global Summit on 9 May 2018, in the track on implementing the Industrial Data Space (IDS) with FIWARE Software Components.
