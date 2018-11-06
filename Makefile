@@ -1,4 +1,6 @@
-all: Transfer_data_MPT_18_Impeller_0002_ref_APS_ok.ttl
+source = Transfer_data_MPT_18_Impeller_0002_ref_APS_ok
+
+all: $(source).ttl
 
 # source: https://stackoverflow.com/questions/241579/what-is-the-easiest-or-most-effective-way-to-convert-months-abbreviation-to-a-n/241589#241589
 %.cleaned.csv: %.csv
@@ -7,6 +9,9 @@ all: Transfer_data_MPT_18_Impeller_0002_ref_APS_ok.ttl
 # retrieve CSV file from https://github.com/Fiware/showcase.IDS.ZeroDefects
 %.csv:
 	wget -N https://github.com/Fiware/showcase.IDS.ZeroDefects/raw/master/MM_data_output/$@
+
+# https://stackoverflow.com/a/43726634
+.PRECIOUS: $(source).csv
 
 %.ttl: %.cleaned.csv mapping.sparql
 	tarql -d ';' mapping.sparql $< > $@
